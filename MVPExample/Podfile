@@ -1,0 +1,54 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '12.0'
+
+inhibit_all_warnings!
+
+target 'MVPExample' do
+  	# Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  	use_frameworks!
+
+  	# Pods for MVPExample
+    pod 'Alamofire', '~> 4.7'
+    pod 'SwiftyJSON', '~> 4.0'
+#    pod 'PromiseKit', '~> 6.4'
+#    pod 'PromiseKit/Alamofire'
+    pod 'SwiftLint', '~> 0.26'
+#    pod 'lottie-ios', '~> 2.5'
+    pod 'MBProgressHUD', '~> 1.1'
+    pod 'ReachabilitySwift', '~> 4.1'
+#    pod 'Firebase/Core'
+#    pod 'Firebase/Auth'
+#    pod 'Firebase/Performance'
+#    pod 'Fabric', '~> 1.7'
+#    pod 'Crashlytics', '~> 3.10'
+    # pod 'Lookback', '~> 2.9'
+
+  	target 'MVPExampleTests' do
+    	inherit! :search_paths
+    	# Pods for testing
+    end
+    
+    target 'MVPExampleUITests' do
+      inherit! :search_paths
+      # Pods for testing
+    end
+
+end
+
+# post_install do |installer|
+#     installer.pods_project.targets.each do |target|
+
+#         # In case of using Lookback, uncomment this
+#         # target.build_configurations.each do |config|
+#         #     config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf'
+#         # end
+
+#         # Support Pods running Swift 4 or older Swift versions
+#         # Replace XXX for the name of the older pods
+#         # if ['XXX'].include? target.name
+#         #     target.build_configurations.each do |config|
+#         #         config.build_settings['SWIFT_VERSION'] = '4.0'
+#         #     end
+#         # end
+#     end
+# end

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HOZ-Vy-49a">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="paD-FA-SfW">
+            <objects>
+                <viewController id="HOZ-Vy-49a" customClass="MainViewController" customModule="MVPExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WI7-tR-764">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-Zv-IdN">
+                                <rect key="frame" x="20" y="60" width="335" height="27"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kCf-SF-cRR">
+                                <rect key="frame" x="163" y="209" width="49" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8iG-wJ-WNw">
+                                <rect key="frame" x="20" y="89" width="335" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🏳️‍🌈" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e8T-EZ-1C3">
+                                <rect key="frame" x="174.5" y="162.5" width="26" height="26.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jnb-R8-zGz">
+                                <rect key="frame" x="116" y="487" width="143" height="30"/>
+                                <state key="normal" title="Get User Information"/>
+                                <connections>
+                                    <action selector="handleRefreshUserButtonTouched:" destination="HOZ-Vy-49a" eventType="touchUpInside" id="x71-gX-cGn"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="8iG-wJ-WNw" firstAttribute="trailing" secondItem="E7f-Zv-IdN" secondAttribute="trailing" id="3vn-TP-soV"/>
+                            <constraint firstItem="Xmh-53-AIo" firstAttribute="trailing" secondItem="E7f-Zv-IdN" secondAttribute="trailing" constant="20" id="D4o-UZ-gqM"/>
+                            <constraint firstItem="e8T-EZ-1C3" firstAttribute="top" secondItem="8iG-wJ-WNw" secondAttribute="bottom" constant="60" id="JCn-5Q-Hiw"/>
+                            <constraint firstItem="e8T-EZ-1C3" firstAttribute="centerX" secondItem="WI7-tR-764" secondAttribute="centerX" id="LSR-KU-FKo"/>
+                            <constraint firstItem="8iG-wJ-WNw" firstAttribute="leading" secondItem="E7f-Zv-IdN" secondAttribute="leading" id="Lkv-5v-hLt"/>
+                            <constraint firstItem="E7f-Zv-IdN" firstAttribute="leading" secondItem="Xmh-53-AIo" secondAttribute="leading" constant="20" id="QYQ-aP-Loc"/>
+                            <constraint firstItem="8iG-wJ-WNw" firstAttribute="top" secondItem="E7f-Zv-IdN" secondAttribute="bottom" constant="2" id="W4G-7X-gM5"/>
+                            <constraint firstItem="kCf-SF-cRR" firstAttribute="top" secondItem="e8T-EZ-1C3" secondAttribute="bottom" constant="20" id="dHz-wd-uop"/>
+                            <constraint firstItem="E7f-Zv-IdN" firstAttribute="top" secondItem="Xmh-53-AIo" secondAttribute="top" constant="40" id="fmZ-o3-0uN"/>
+                            <constraint firstItem="Jnb-R8-zGz" firstAttribute="centerX" secondItem="WI7-tR-764" secondAttribute="centerX" id="jR0-U7-Lfh"/>
+                            <constraint firstItem="Xmh-53-AIo" firstAttribute="bottom" secondItem="Jnb-R8-zGz" secondAttribute="bottom" constant="150" id="pxO-DE-pSh"/>
+                            <constraint firstItem="kCf-SF-cRR" firstAttribute="centerX" secondItem="WI7-tR-764" secondAttribute="centerX" id="rL1-vl-QMs"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Xmh-53-AIo"/>
+                    </view>
+                    <connections>
+                        <outlet property="countryLabel" destination="e8T-EZ-1C3" id="aes-wc-eMb"/>
+                        <outlet property="idLabel" destination="8iG-wJ-WNw" id="cL1-RM-JYV"/>
+                        <outlet property="nameLabel" destination="E7f-Zv-IdN" id="Pbt-zG-nHm"/>
+                        <outlet property="phoneLabel" destination="kCf-SF-cRR" id="fPc-5B-ymZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KPw-Ty-c8Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="204" y="65"/>
+        </scene>
+    </scenes>
+</document>

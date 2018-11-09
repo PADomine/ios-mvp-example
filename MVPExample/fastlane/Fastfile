@@ -1,0 +1,199 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+xcversion(version: "10.1") # Selects Xcode 10.1
+
+#Constants
+workspace = "MVPExample.xcworkspace"
+project = "MVPExample.xcodeproj"
+appIdentifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+teamId = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+version_number = get_version_number(xcodeproj: project)
+build_number = get_build_number(xcodeproj: project)
+devUser = "ios@lateralview.net"
+
+default_platform(:ios)
+
+platform :ios do
+	before_all do
+		setup_circle_ci
+	end
+
+# Testing
+
+  # desc "Runs all the tests"
+  # lane :tests do
+  #   unit_tests
+  #   ui_tests
+  # end
+
+  desc "Runs all unit tests"
+  lane :unit_tests do
+    scan(
+      workspace: workspace,
+      scheme: "MVPExampleTests",
+      device: "iPhone 8",
+      clean: true
+    )
+  end
+
+  # desc "Runs all ui tests"
+  # lane :ui_tests do
+  #   scan(
+  #     workspace: workspace,
+  #     scheme: "CamilleUITests",
+  #     device: "iPhone 7",
+  #     clean: true
+  #   )
+  # end
+
+# Certificates
+
+desc "Fetches development and distribution certificates and provisioning profiles"
+lane :fetch_all_certificates do |options|
+	fetch_development_certificates readonly:options[:readonly]
+	fetch_distribution_certificates readonly:options[:readonly]
+end
+
+desc "Fetches development certificate and provisioning profile"
+lane :fetch_development_certificates do |options|
+	match(
+		app_identifier: appIdentifier,
+		readonly: options[:readonly], 
+		team_id: teamId, 
+		type: 'development',
+		username: devUser
+		)
+end
+
+desc "Fetches distribution certificate and provisioning profile"
+lane :fetch_distribution_certificates do |options|
+	match(
+		app_identifier: appIdentifier,
+		readonly: options[:readonly], 
+		team_id: teamId, 
+		type: 'appstore',
+		username: devUser
+		)
+end
+
+# Distribution
+
+desc "Push a new build to TestFlight"
+lane :beta do |options|
+	# Increment build number
+	version pushToGit: false
+
+  	# Download Certificates
+  	fetch_distribution_certificates readonly: true # keep in false to avoid CI to create new certificates
+
+	# Build and create IPA
+	gym(
+		verbose: true,
+		workspace: workspace,
+		configuration: "Release",
+		scheme: "MVPExample",
+		clean: true,
+		export_method: "app-store",
+		silent: true,
+		output_directory: "../Builds",
+		output_name: "MVPExample_#{version_number}_#{lane_context[SharedValues::BUILD_NUMBER]}",
+		include_symbols: true,
+		include_bitcode: true
+		)
+
+	# Upload to Testflight
+
+  	testflight(
+  		skip_submission: false,
+  		skip_waiting_for_build_processing: true,
+  		distribute_external: false,
+  		notify_external_testers: false,
+  		demo_account_required: false,
+		changelog: "Nuevas features y mejoras.",
+  		reject_build_waiting_for_review: false
+  		)
+
+  end
+
+# Increment version
+
+desc "Increment build number"
+lane :version do |options|
+	# Increment the build number (not the version number)
+	version = increment_build_number({
+		build_number: latest_testflight_build_number(version: version_number, initial_build_number: 0) + 1,
+		xcodeproj: project
+	})
+
+	if options[:pushToGit]
+	# Ensure that your git status is not dirty
+	ensure_git_status_clean
+
+    # Commit the version bump
+    commit_version_bump(xcodeproj: project)
+
+  	# Add a git tag for this build. This will automatically
+  	# use an appropriate git tag name
+  	add_git_tag
+
+  	# Push the new commit and tag back to your git remote
+  	push_to_git_remote
+  	end
+end
+
+# Devices
+
+desc "Register new devices"
+lane :devices do 
+	device_name = prompt(text: "Enter the device name: ")
+	device_udid = prompt(text: "Enter the device UDID: ")
+	devices = {}
+	devices[device_name] = device_udid
+	register_devices(
+		devices: devices,
+		username: devUser
+		)
+	match(
+		app_identifier: appIdentifier,
+		force: true,
+		team_id: teamId, 
+		type: 'appstore',
+		username: devUser
+		)
+	match(
+		app_identifier: appIdentifier,
+		force: true,
+		force_for_new_devices: true,
+		team_id: teamId, 
+		type: 'development',
+		username: devUser
+		)
+end
+
+after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+end
+
+error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+end
+end

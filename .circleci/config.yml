@@ -1,0 +1,101 @@
+version: 2
+jobs:
+  build-and-test:
+    macos:
+      xcode: "10.1.0"
+    working_directory: /Users/distiller/project
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      FASTLANE_LANE: unit_tests
+    shell: /bin/bash --login -o pipefail
+    steps:
+      - checkout
+      # - run:
+      #     name: Start iOS Simulator
+      #     command: xcrun instruments -w "iPhone 8 (11.3) [" || true
+      - restore_cache:
+          keys: 
+            - v1-macos-gems-{{ arch }}-{{ .Branch }}-{{ checksum "MVPExample/Gemfile.lock" }}
+            - v1-macos-gems-{{ arch }}-{{ .Branch }}
+            - v1-macos-gems
+      - run:
+          name: Update lastest Bundler and fastlane version; update dependencies
+          command: |
+            cd MVPExample
+            sudo gem install bundler
+            bundle update fastlane
+            bundle check --path ../.bundle || bundle install --path ../.bundle
+      - save_cache:
+          key: v1-macos-gems-{{ arch }}-{{ .Branch }}-{{ checksum "MVPExample/Gemfile.lock" }}
+          paths:
+            - .bundle
+      - run:
+          name: Run Fastlane Tests
+          command: |
+            cd MVPExample
+            bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: MVPExample/fastlane/test_output/
+          destination: reports
+      - store_test_results:
+          path: MVPExample/fastlane/test_output/
+
+  beta:
+    macos:
+      xcode: "10.1.0"
+    working_directory: /Users/distiller/project
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      FASTLANE_LANE: beta
+    shell: /bin/bash --login -o pipefail
+    steps:     
+      - checkout 
+      # - run:
+      #     name: Start iOS Simulator
+      #     command: xcrun instruments -w "iPhone 8 (11.3) [" || true
+      - restore_cache:
+          keys: 
+            - v1-macos-gems-{{ arch }}-{{ .Branch }}-{{ checksum "MVPExample/Gemfile.lock" }}
+            - v1-macos-gems-{{ arch }}-{{ .Branch }}
+            - v1-macos-gems
+      - run:
+          name: Update lastest Bundler and fastlane version; update dependencies
+          command: |
+            cd MVPExample
+            sudo gem install fastlane
+            sudo gem install bundler
+            bundle update fastlane
+            bundle check --path ../.bundle || bundle install --path ../.bundle
+      - save_cache:
+          key: v1-macos-gems-{{ arch }}-{{ .Branch }}-{{ checksum "MVPExample/Gemfile.lock" }}
+          paths:
+            - .bundle
+      - run:
+          name: Build project
+          command: |
+            cd MVPExample
+            bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: Builds
+          destination: builds
+
+workflows:
+  version: 2
+  build-test-beta:
+    jobs:
+      - build-and-test
+  
+# Uncomment this for final project
+# workflows:
+#   version: 2
+#   build-test-beta:
+#     jobs:
+#       - build-and-test
+#       - beta-internal:
+#           filters:
+#             branches:
+#               only: develop
+#           requires:
+#             - build-and-test

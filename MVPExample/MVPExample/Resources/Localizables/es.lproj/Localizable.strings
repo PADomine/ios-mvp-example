@@ -1,0 +1,13 @@
+/* 
+  Localizables.strings
+  MVPExample
+
+  Created by Pablo Dominé on 08/11/2018.
+  Copyright © 2018 Lateral View. All rights reserved.
+*/
+
+ErrorTitle = "Houston, tenemos un problema";
+ErrorMessage = "Por favor, intenta nuevamente";
+Ok = "Ok";
+
+ErrorUserNotFoundMessage = "Usuario no encontrado, intenta nuevamente";
